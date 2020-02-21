@@ -1,12 +1,20 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
-import AllRestaurants from './components/AllRestaurants'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import AllRestaurants from './components/AllRestaurants';
+import NavBar from './components/NavBar/NavBar';
+import Video from './components/Video/Video';
 
 function App() {
     require('dotenv').config()
   return (
-    <AllRestaurants />
+      <div>
+          {/*<Video />*/}
+
+          <AllRestaurants/>
+      </div>
+
   );
 }
 

@@ -1,22 +1,59 @@
 import React, {Component} from 'react';
-import Axios from 'axios';
+import VideoSrc from "./Video/food.mp4";
+import NavBar from "./NavBar/NavBar";
+import {Link} from 'react-router-dom'
 
-const token = process.env.REACT_APP_API_KEY
-class AllRestaurants extends Component{
+const overlay = {
+    position: "absolute",
+    color: "#FFF",
+    textAlign: "center",
+    fontSize: "20px",
+    // backgroundColor: "rgba(221, 221, 221, 0.3)",
+    width: "100%",
+    padding: "10px 0",
+    zIndex: "2147483647",
+}
 
-    componentDidMount(){
-        Axios({
-            method: 'get',
-            url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/autocomplete?text=del&latitude=37.786882&longitude=-122.399972`,
-            headers: {'Authorization': 'Bearer ' + token}
-        }).then(res => {
-            console.log(res)
-        })
-        .catch(console.log)
+class AllRestaurants extends Component {
+
+    constructor(){
+        super();
+        this.state = {
+            location: ""
+        }
+    }
+
+    handleChange(value) {
+        this.setState({
+            location: value
+        });
     }
 
     render() {
-        return (<div>Hi</div>)
+        return (
+            <div>
+                <div style={overlay}>
+                    <NavBar/>
+                    <div style={{margin: "20% 0"}}>
+                        <input type="text" value={this.state.location} placeholder="United States of America"
+                               onChange={(e) => this.handleChange(e.target.value)}/>
+                        <button type="button"><Link to={{
+                            pathname: "/search",
+                            location: this.state.location
+                        }}>Search</Link></button>
+                    </div>
+                </div>
+                <video autoPlay loop muted style={{
+                    width: "100%",
+                    height: "100%",
+                    opacity: "1",
+                    transition: "opacity, 2s ease-in-out",
+                }}>
+                    <source src={VideoSrc} type="video/mp4"/>
+                </video>
+
+
+            </div>)
     }
 
 }
