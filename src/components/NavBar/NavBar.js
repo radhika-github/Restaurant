@@ -6,15 +6,16 @@ import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import FormControl from 'react-bootstrap/FormControl';
 import './navbar.css';
+import Heading from "./Heading";
 
 class NavBar extends Component{
     render() {
         return (
-            <div style={{margin:"5% 0 0 5%"}}>
+            <div>
                 <Navbar navbar transparent navbar-inverse expand="lg">
-                    <Navbar.Brand href="#home" style={{color:"white"}}>Food Hunt</Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                    <Navbar.Collapse id="basic-navbar-nav">
+                    <Heading title={"Food Hunt"} type={"h1"}/>
+                    {/*<Navbar.Toggle aria-controls="basic-navbar-nav" />*/}
+                    {/*<Navbar.Collapse id="basic-navbar-nav">*/}
                         {/*<Nav className="mr-auto">*/}
                             {/*<Nav.Link href="#home">Home</Nav.Link>*/}
                             {/*<Nav.Link href="#link">Link</Nav.Link>*/}
@@ -30,7 +31,7 @@ class NavBar extends Component{
                             {/*<FormControl type="text" placeholder="Search" className="mr-sm-2" />*/}
                             {/*<Button variant="outline-success">Search</Button>*/}
                         {/*</Form>*/}
-                    </Navbar.Collapse>
+                    {/*</Navbar.Collapse>*/}
                 </Navbar>
             </div>
         );

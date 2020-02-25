@@ -6,19 +6,20 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {makeStyles} from "@material-ui/core";
 import NavBar from "../NavBar/NavBar";
+import './restaurants.css'
+import Restaurant from '../Restaurant/Restaurant'
+import {Link} from "react-router-dom";
 
 const classes = makeStyles(theme => ({
     root: {
         display: 'flex',
         flexWrap: 'wrap',
         justifyContent: 'space-around',
-        overflow: 'hidden',
         backgroundColor: theme.palette.background.paper,
     },
     gridList: {
         width: 500,
         height: 450,
-        // Promote the list into his own layer on Chrome. This cost memory but helps keeping high FPS.
         transform: 'translateZ(0)',
     },
     titleBar: {
@@ -29,33 +30,79 @@ const classes = makeStyles(theme => ({
     icon: {
         color: 'white',
     },
+    textStyle: {
+        position: 'absolute',
+    },
 }));
 
-class RestaurantList extends Component{
+class RestaurantList extends Component {
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            hoverCellId: ""
+        }
+    }
+
 
     render() {
         return (
             <div>
-                <NavBar/>
-                <div className={classes.root}>
-                    <GridList cellHeight={500} spacing={2} className={classes.gridList}>
-                        {Array.from(this.props.restaurants).map(tile => (
-                            <GridListTile key={tile.img} cols={1} rows={1}>
-                                <img src={tile.image_url} alt={tile.title} />
-                                <GridListTileBar
-                                    title={tile.name}
-                                    titlePosition="top"
-                                    actionIcon={
-                                        <IconButton aria-label={`star ${tile.name}`} className={classes.icon}>
-                                            <StarBorderIcon />
-                                        </IconButton>
-                                    }
-                                    actionPosition="left"
-                                    className={classes.titleBar}
-                                />
-                            </GridListTile>
-                        ))}
-                    </GridList>
+                <div style={{overflow: "hidden", margin: "0 15%"}}>
+                    <div className={classes.root}>
+                        <GridList cellHeight={400} cols={3} spacing={20} className={classes.gridList} margin={20}>
+                            {
+                                Array.from(this.props.restaurants).map(tile => (
+
+                                    <GridListTile key={tile.image_url} cols={1} rows={1} onMouseEnter={() => {
+                                        this.setState({hoverCellId: tile.id})
+                                    }}
+                                                  onMouseLeave={() => {
+                                                      this.setState({hoverCellId: ""})
+                                                  }}>
+                                        {
+                                            (tile.id === this.state.hoverCellId) ?
+                                                (
+
+                                                    <img src={tile.image_url} alt={tile.name}
+                                                      onClick={() => window.open(`/restaurant/${tile.name}`, '_self')}
+                                                      style={{opacity: "0.5"}}
+                                                />
+
+                                                ) : (<img src={tile.image_url} alt={tile.name}
+                                                            onClick={() => window.open(`/restaurant/${tile.name}`, '_self')}
+                                                />)
+                                        }
+
+                                        <GridListTileBar
+                                            title={tile.name}
+                                            titlePosition="top"
+                                            actionIcon={
+                                                <IconButton aria-label={`star ${tile.name}`} className={classes.icon}>
+                                                    <StarBorderIcon/>
+                                                </IconButton>
+                                            }
+                                            actionPosition="left"
+                                            className={classes.titleBar}
+                                        />
+
+                                        {
+                                            (tile.is_closed === true) ? (
+                                                <div className="ribbon closed ribbon-bottom-right">
+                                                    <span>&nbsp;&nbsp;CLOSED NOW</span>
+                                                </div>) : (
+                                                <div className="ribbon open ribbon-bottom-right">
+                                                    <span>&nbsp;&nbsp;OPEN NOW</span>
+                                                </div>)
+                                        }
+
+
+                                    </GridListTile>
+
+                                ))}
+                        </GridList>
+
+                    </div>
                 </div>
             </div>
         )

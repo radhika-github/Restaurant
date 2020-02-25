@@ -5,12 +5,15 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import Search from './components/Search/Search'
+import Restaurant from './components/Restaurant/Restaurant'
 
 const routing = (
     <Router>
         <div>
             <Route exact path="/" component={App} />
-            <Route exact path="/search" component={Search} />
+            <Route exact path="/search/:location" component={Search} />
+            <Route exact path="/search/:location/:term" component={Search} />
+            <Route exact path="/restaurant/:name" component={Restaurant} />
         </div>
     </Router>
 )
