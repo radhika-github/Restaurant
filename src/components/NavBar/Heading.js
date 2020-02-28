@@ -2,12 +2,15 @@ import React, {Component} from 'react';
 import Navbar from 'react-bootstrap/Navbar';
 import './navbar.css'
 import {Link} from "react-router-dom";
+
+let h = {h1: "6rem", h2: "3rem", h5: "1rem"};
 class Heading extends Component{
 
     constructor(props){
         super(props);
         this.state= {
-            font: (this.props.type=== "h1"? "6rem": "3rem")
+            h : [],
+            font: h[this.props.type]
         }
     }
     render() {

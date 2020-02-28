@@ -83,7 +83,7 @@ class RestaurantList extends Component {
                                             titlePosition="top"
                                             actionIcon={
                                                 <IconButton aria-label={`star ${tile.name}`} className={classes.icon}>
-                                                    <StarBorderIcon/>
+                                                    {/*<StarBorderIcon/>*/}
                                                 </IconButton>
                                             }
                                             actionPosition="left"

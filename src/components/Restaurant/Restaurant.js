@@ -45,7 +45,7 @@ class Restaurant extends Component {
                 <NavBar/>
                 <div style={{margin:"0 30%"}}>
                     <div className="carousel-wrapper" style={{paddingLeft: "20%"}}>
-                        <Carousel autoPlay={true}showArrows={true} width={"70%"} showIndicators={true} infiniteLoop={true}>
+                        <Carousel autoPlay={true}showArrows={true} width={"70%"} showIndicators={true} infiniteLoop={true} >
                             {
                                 this.state.images.map((photo, index) => (
                                     <div>
