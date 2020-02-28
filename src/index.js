@@ -13,7 +13,7 @@ const routing = (
             <Route exact path="/" component={App} />
             <Route exact path="/search/:location" component={Search} />
             <Route exact path="/search/:location/:term" component={Search} />
-            <Route exact path="/restaurant/:name" component={Restaurant} />
+            <Route exact path="/restaurant/:name/:id" component={Restaurant} />
         </div>
     </Router>
 )
