@@ -49,7 +49,6 @@ class AllRestaurants extends Component {
             headers: {'Authorization': 'Bearer ' + token}
         }).then(res => {
             this.setState({restaurants: res.data.businesses})
-            console.log(this.state.restaurants)
         })
             .catch(console.log)
     }

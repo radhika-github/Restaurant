@@ -5,10 +5,7 @@ import GridListTileBar from "@material-ui/core/GridListTileBar/GridListTileBar";
 import IconButton from "@material-ui/core/IconButton/IconButton";
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {makeStyles} from "@material-ui/core";
-import NavBar from "../NavBar/NavBar";
 import './restaurants.css'
-import Restaurant from '../Restaurant/Restaurant'
-import {Link} from "react-router-dom";
 
 const classes = makeStyles(theme => ({
     root: {
@@ -40,8 +37,14 @@ class RestaurantList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            hoverCellId: ""
+            hoverCellId: "",
+            showRestaurantDetails: false
         }
+        this.onTileClick = this.onTileClick.bind(this);
+    }
+
+    onTileClick() {
+        this.setState({showRestaurantDetails: true});
     }
 
 
@@ -61,16 +64,17 @@ class RestaurantList extends Component {
                                                       this.setState({hoverCellId: ""})
                                                   }}>
                                         {
+
                                             (tile.id === this.state.hoverCellId) ?
                                                 (
 
                                                     <img src={tile.image_url} alt={tile.name}
-                                                      onClick={() => window.open(`/restaurant/${tile.name}`, '_self')}
-                                                      style={{opacity: "0.5"}}
-                                                />
+                                                         onClick={() => window.open(`/restaurant/${tile.name.replace(" ", "-")}/${tile.id}`, '_self')}
+                                                         style={{opacity: "0.5"}}
+                                                    />
 
                                                 ) : (<img src={tile.image_url} alt={tile.name}
-                                                            onClick={() => window.open(`/restaurant/${tile.name}`, '_self')}
+                                                          onClick={() => window.open(`/restaurant/${tile.name.replace(" ", "-")}/${tile.id}`, '_self')}
                                                 />)
                                         }
 
