@@ -49,7 +49,7 @@ class Restaurant extends Component {
                             {
                                 this.state.images.map((photo, index) => (
                                     <div>
-                                        <img src={photo}/>
+                                        <img src={photo} style={{width: "100%", height:"400px",objectFit:"cover"}}/>
                                     </div>
                                 ))
                             }
