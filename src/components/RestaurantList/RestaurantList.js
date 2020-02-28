@@ -6,6 +6,7 @@ import IconButton from "@material-ui/core/IconButton/IconButton";
 import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {makeStyles} from "@material-ui/core";
 import './restaurants.css'
+import Heading from '../NavBar/Heading';
 
 const classes = makeStyles(theme => ({
     root: {
@@ -55,55 +56,58 @@ class RestaurantList extends Component {
                     <div className={classes.root}>
                         <GridList cellHeight={400} cols={3} spacing={20} className={classes.gridList} margin={20}>
                             {
-                                Array.from(this.props.restaurants).map(tile => (
+                                (this.props.restaurants.length>0)?(
+                                    Array.from(this.props.restaurants).map(tile => (
 
-                                    <GridListTile key={tile.image_url} cols={1} rows={1} onMouseEnter={() => {
-                                        this.setState({hoverCellId: tile.id})
-                                    }}
-                                                  onMouseLeave={() => {
-                                                      this.setState({hoverCellId: ""})
-                                                  }}>
-                                        {
-
-                                            (tile.id === this.state.hoverCellId) ?
-                                                (
-
-                                                    <img src={tile.image_url} alt={tile.name}
-                                                         onClick={() => window.open(`/restaurant/${tile.name.replace(" ", "-")}/${tile.id}`, '_self')}
-                                                         style={{opacity: "0.5"}}
-                                                    />
-
-                                                ) : (<img src={tile.image_url} alt={tile.name}
-                                                          onClick={() => window.open(`/restaurant/${tile.name.replace(" ", "-")}/${tile.id}`, '_self')}
-                                                />)
-                                        }
-
-                                        <GridListTileBar
-                                            title={tile.name}
-                                            titlePosition="top"
-                                            actionIcon={
-                                                <IconButton aria-label={`star ${tile.name}`} className={classes.icon}>
-                                                    {/*<StarBorderIcon/>*/}
-                                                </IconButton>
+                                        <GridListTile key={tile.image_url} cols={1} rows={1} onMouseEnter={() => {
+                                            this.setState({hoverCellId: tile.id})
+                                        }}
+                                                      onMouseLeave={() => {
+                                                          this.setState({hoverCellId: ""})
+                                                      }}>
+                                            {
+    
+                                                (tile.id === this.state.hoverCellId) ?
+                                                    (
+    
+                                                        <img src={tile.image_url} alt={tile.name}
+                                                             onClick={() => window.open(`/restaurant/${tile.name.replace(" ", "-")}/${tile.id}`, '_self')}
+                                                             style={{opacity: "0.5"}}
+                                                        />
+    
+                                                    ) : (<img src={tile.image_url} alt={tile.name}
+                                                              onClick={() => window.open(`/restaurant/${tile.name.replace(" ", "-")}/${tile.id}`, '_self')}
+                                                    />)
                                             }
-                                            actionPosition="left"
-                                            className={classes.titleBar}
-                                        />
-
-                                        {
-                                            (tile.is_closed === true) ? (
-                                                <div className="ribbon closed ribbon-bottom-right">
-                                                    <span>&nbsp;&nbsp;CLOSED NOW</span>
-                                                </div>) : (
-                                                <div className="ribbon open ribbon-bottom-right">
-                                                    <span>&nbsp;&nbsp;OPEN NOW</span>
-                                                </div>)
-                                        }
-
-
-                                    </GridListTile>
-
-                                ))}
+    
+                                            <GridListTileBar
+                                                title={tile.name}
+                                                titlePosition="top"
+                                                actionIcon={
+                                                    <IconButton aria-label={`star ${tile.name}`} className={classes.icon}>
+                                                        {/*<StarBorderIcon/>*/}
+                                                    </IconButton>
+                                                }
+                                                actionPosition="left"
+                                                className={classes.titleBar}
+                                            />
+    
+                                            {
+                                                (tile.is_closed === true) ? (
+                                                    <div className="ribbon closed ribbon-bottom-right">
+                                                        <span>&nbsp;&nbsp;CLOSED NOW</span>
+                                                    </div>) : (
+                                                    <div className="ribbon open ribbon-bottom-right">
+                                                        <span>&nbsp;&nbsp;OPEN NOW</span>
+                                                    </div>)
+                                            }
+    
+    
+                                        </GridListTile>
+    
+                                    ))
+                                ):(<div><Heading type="h2" title="No Results Found"/></div>)
+                                }
                         </GridList>
 
                     </div>

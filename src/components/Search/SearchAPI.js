@@ -15,7 +15,6 @@ class SearchAPI extends Component{
         super(props);
         console.log(this.props.openNow)
         this.getBusinessByLocation = this.getBusinessByLocation.bind(this);
-        this.filtering = this.filtering.bind(this)
     }
 
     getBusinessByLocation =()=>{
@@ -36,44 +35,22 @@ class SearchAPI extends Component{
         this.getBusinessByLocation();
     }
 
-    filtering(item) {
-        console.log(item.price)
-        if (this.props.priceHigh === true && item.price=== "$$$"){
-            return true;
-        }
-
-        if (this.props.priceMedium === true && item.price=== "$$"){
-            return true;
-        }
-
-        return false;
-    }
-
     componentDidUpdate(prevProps){
         if (this.props!== prevProps) {
             let result = this.state.restaurants;
             if (this.props.openNow === true) {
+                console.log("hi")
                 result = result.filter(restaurant =>
                     restaurant.is_closed === false)
             }
 
-
-                result = result.filter((item)=>{this.filtering(item)})
-
-            // if(this.props.priceMedium === true){
-            //     result = result.filter(restaurant =>
-            //         restaurant.price === "$$")
-            // }
-            // if(this.props.priceHigh === true){
-            //     result = result.filter(restaurant =>
-            //         restaurant.price === "$$$")
-            // }
-            // if(this.props.priceVeryHigh === true){
-            //     result = result.filter(restaurant =>
-            //         restaurant.price === "$$$$")
-            // }
+            if(this.props.priceLow || this.props.priceMedium || this.props.priceHigh || this.props.priceVeryHigh){
+                result = result.filter( restaurant =>
+                    (this.props.priceLow === true && restaurant.price === "$") || (this.props.priceMedium === true && restaurant.price === "$$") ||
+                    (this.props.priceHigh === true && restaurant.price === "$$$") || (this.props.priceVeryHigh === true && restaurant.price === "$$$$"))
+            }
+                
             this.setState({searchResult: result})
-            // console.log(this.state.searchResult)
         }
     }
 
