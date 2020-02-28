@@ -1,10 +1,8 @@
 import React, {Component} from 'react';
 import NavBar from "../NavBar/NavBar";
 import Axios from "axios";
-import "react-responsive-carousel/lib/styles/carousel.min.css";
 import {Carousel} from "react-responsive-carousel";
-// import Carousel from 'react-bootstrap/Carousel'
-import './restaurant.css'
+import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 const token = process.env.REACT_APP_API_KEY
 
@@ -14,7 +12,7 @@ class Restaurant extends Component {
         super(props);
         this.state = {
             restaurant: "",
-            images: []
+            images: [],
         }
     }
 
@@ -41,51 +39,24 @@ class Restaurant extends Component {
     }
 
     render() {
-        let styles = {
-            margin: 'auto'
-            // width: '500px'
-        };
 
         return (
             <div>
                 <NavBar/>
-
-                <div id='carousel-custom' className='carousel slide' data-ride='carousel'>
-                    <div className='carousel-outer'>
-                        <div className='carousel-inner'>
+                <div style={{margin:"0 30%"}}>
+                    <div className="carousel-wrapper" style={{paddingLeft: "20%"}}>
+                        <Carousel autoPlay={true}showArrows={true} width={"70%"} showIndicators={true} infiniteLoop={true} >
                             {
                                 this.state.images.map((photo, index) => (
-                                (index==0)?(
-                                    <div className='item active'>
+                                    <div>
                                         <img src={photo}/>
                                     </div>
-                                ):(
-                                    <div className='item'>
-                                        <img src={photo}/>
-                                    </div>
-                                )
-
                                 ))
                             }
-                        </div>
-
-                        <a className='left carousel-control' href='#carousel-custom' data-slide='prev'>
-                            <span className='glyphicon glyphicon-chevron-left'></span>
-                        </a>
-                        <a className='right carousel-control' href='#carousel-custom' data-slide='next'>
-                            <span className='glyphicon glyphicon-chevron-right'></span>
-                        </a>
+                        </Carousel>
                     </div>
-
-                    <ol className='carousel-indicators'>
-                        {
-                            this.state.images.map((photo, index) => (
-                                <li data-target='#carousel-custom' data-slide-to={index} className='active'><img
-                                    src={photo} alt=''/></li>
-                            ))
-                        }
-                    </ol>
                 </div>
+
             </div>);
     }
 }

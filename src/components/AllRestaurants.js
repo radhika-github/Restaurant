@@ -62,15 +62,22 @@ class AllRestaurants extends Component {
             <div>
                 <div style={overlay}>
                     <Heading title={"Food Hunt"} type={"h1"}/>
-                    <div style={{margin: "20% 0"}}>
-                        <input type="text" value={this.state.term}
-                               placeholder="Search any restaurant or food or cuisine"
-                               onChange={(e) => this.handleSearchChange(e.target.value)}/>
-                        <input type="text" value={this.state.location} placeholder="United States of America"
-                               onChange={(e) => this.handleLocationChange(e.target.value)}/>
-                        <button type="button"><Link to={{
-                            pathname: '/search/'+ (this.state.location===""? "USA": this.state.location)+ (this.state.term===""? "": `/${this.state.term}`),
-                        }}>Search</Link></button>
+                    <div style={{margin: "13% 0"}}>
+                        <div style={{background: "rgba(0,0,0,0.5)", padding: "1% 1%", margin: "0 23%"}}>
+                            <input type="text" value={this.state.term} style={{width: "390px", opacity: "1"}}
+                                   placeholder="Search any restaurant or food or cuisine"
+                                   onChange={(e) => this.handleSearchChange(e.target.value)}/>
+                            &nbsp;&nbsp;&nbsp;
+                            <input type="text" value={this.state.location} placeholder="United States of America"
+                                   style={{width: "290px"}}
+                                   onChange={(e) => this.handleLocationChange(e.target.value)}/>
+                            &nbsp;&nbsp;&nbsp;
+                            <button type="button"><Link to={{
+                                pathname: '/search/' + (this.state.location === "" ? "USA" : this.state.location) + (this.state.term === "" ? "" : `/${this.state.term}`),
+                            }}>Search</Link></button>
+
+                        </div>
+
                     </div>
                     <CustomChatbot eventHandler={this.clickEventHandler}/>
                 </div>
