@@ -6,6 +6,9 @@ import CustomChatbot from "./Chatbot/CustomChatbot";
 import Axios from "axios";
 import RestaurantList from "./RestaurantList/RestaurantList";
 import Heading from "./NavBar/Heading";
+import {geolocated} from "react-geolocated";
+import Geocode from "react-geocode";
+// import Loading from "./LoadingIcon/Loading";
 
 const overlay = {
     position: "absolute",
@@ -24,9 +27,12 @@ class AllRestaurants extends Component {
     constructor() {
         super();
         this.state = {
-            location: "",
+            latitude: null,
+            longitude: null,
             term: "",
-            restaurants: {}
+            restaurants: {},
+            location: "",
+            // componentsLoaded: false
         }
     }
 
@@ -43,18 +49,48 @@ class AllRestaurants extends Component {
     }
 
     getBusinessByLocation = () => {
+        let url = "";
+        if (this.state.latitude != null && this.state.longitude != null) {
+            url = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?latitude=${this.state.latitude}&longitude=${this.state.longitude}&limit=3`
+        } else {
+            url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=USA&limit=3"
+        }
         Axios({
             method: 'get',
-            url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=USA&limit=3`,
+            url: url,
             headers: {'Authorization': 'Bearer ' + token}
         }).then(res => {
             this.setState({restaurants: res.data.businesses})
         })
             .catch(console.log)
+
+        Geocode.setApiKey("AIzaSyBi_JTzVqM5i25N6YLkEnn81lCxKj2BtdQ");
+        Geocode.setLanguage("en");
+        Geocode.setRegion("us");
+        Geocode.enableDebug();
+        Geocode.fromLatLng(this.state.latitude, this.state.longitude).then(
+            response => {
+                const address = response.results[0].formatted_address;
+                console.log(address);
+                this.setState({location: address})
+            },
+            error => {
+                console.error(error);
+            }
+        );
+        // this.setState({componentsLoaded: true})
+
     }
 
-    componentWillMount() {
-        this.getBusinessByLocation();
+
+    componentDidMount() {
+        window.navigator.geolocation.getCurrentPosition(
+            success => {
+                this.setState({latitude: success.coords.latitude});
+                this.setState({longitude: success.coords.longitude});
+                this.getBusinessByLocation();
+            });
+
     }
 
     render() {
@@ -62,14 +98,14 @@ class AllRestaurants extends Component {
             <div>
                 <div style={overlay}>
                     <Heading title={"Food Hunt"} type={"h1"}/>
-                    <div style={{margin: "13% 0"}}>
-                        <div style={{background: "rgba(0,0,0,0.5)", padding: "1% 1%", margin: "0 23%"}}>
+                    <div style={{margin: "10% 0"}}>
+                        <div style={{background: "rgba(0,0,0,0.5)", padding: "1% 1%", margin: "0 20%"}}>
                             <input type="text" value={this.state.term} style={{width: "390px", opacity: "1"}}
                                    placeholder="Search any restaurant or food or cuisine"
                                    onChange={(e) => this.handleSearchChange(e.target.value)}/>
                             &nbsp;&nbsp;&nbsp;
                             <input type="text" value={this.state.location} placeholder="United States of America"
-                                   style={{width: "290px"}}
+                                   style={{width: "350px"}}
                                    onChange={(e) => this.handleLocationChange(e.target.value)}/>
                             &nbsp;&nbsp;&nbsp;
                             <button type="button"><Link to={{
@@ -91,11 +127,18 @@ class AllRestaurants extends Component {
                 </video>
                 <div>
                     <Heading title={"Some Restaurants Near You..."} type={"h2"}/>
-                    <RestaurantList restaurants={this.state.restaurants}/>
+                    {/*{(this.state.componentsLoaded === true) ? (*/}
+                        <RestaurantList restaurants={this.state.restaurants}/>
+                    {/*) : (<Loading/>)}*/}
                 </div>
             </div>)
     }
 
 }
 
-export default AllRestaurants;
+export default geolocated({
+    positionOptions: {
+        enableHighAccuracy: false,
+    },
+    userDecisionTimeout: 5000,
+})(AllRestaurants);
