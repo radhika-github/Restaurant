@@ -52,7 +52,7 @@ class RestaurantList extends Component {
     render() {
         return (
             <div>
-                <div style={{overflow: "hidden", margin: "0 15%"}}>
+                <div style={{overflow: "hidden", margin: "0 15% 5% 15%"}}>
                     <div className={classes.root}>
                         <GridList cellHeight={400} cols={3} spacing={20} className={classes.gridList} margin={20}>
                             {
