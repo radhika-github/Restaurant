@@ -64,7 +64,7 @@ class AllRestaurants extends Component {
         })
             .catch(console.log)
 
-        Geocode.setApiKey("AIzaSyBi_JTzVqM5i25N6YLkEnn81lCxKj2BtdQ");
+        Geocode.setApiKey(process.env.REACT_APP_GOOGLE_MAP_KEY);
         Geocode.setLanguage("en");
         Geocode.setRegion("us");
         Geocode.enableDebug();

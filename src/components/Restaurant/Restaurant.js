@@ -11,6 +11,7 @@ import StarRatingComponent from 'react-star-rating-component';
 import PhoneIcon from '@material-ui/icons/Phone';
 import RoomIcon from '@material-ui/icons/Room';
 import MoneyIcon from '@material-ui/icons/Money';
+import Map from "../GoogleMaps/Map";
 
 // import faStyles from 'font-awesome/css/font-awesome.css'
 
@@ -25,7 +26,9 @@ class Restaurant extends Component {
             restaurant: "",
             images: [],
             address1: "",
-            address2: ""
+            address2: "",
+            latitude: 0,
+            longitude: 0
         }
     }
 
@@ -40,11 +43,12 @@ class Restaurant extends Component {
             this.setState({images: res.data.photos})
             this.setState({restaurant: res.data})
             let location = this.state.restaurant.location;
-            console.log(location)
             this.setState({address1:location.display_address[0]})
             this.setState({address2: location.display_address[1]})
             let hours = this.state.restaurant.hours;
-            console.log(hours)
+            let coordinates = this.state.restaurant.coordinates;
+            this.setState({latitude: coordinates.latitude})
+            this.setState({longitude: coordinates.longitude})
         })
             .catch(console.log)
     }
@@ -116,6 +120,8 @@ class Restaurant extends Component {
                             {/*<Card.Link href="#">Another Link</Card.Link>*/}
                         </Card.Body>
                     </Card>
+                    <br/><br/>
+                    <Map isMarkerShown height={"40%"} width={"40%"} destLat={this.state.latitude} destLng={this.state.longitude}/>
                 </div>
             </div>);
     }
