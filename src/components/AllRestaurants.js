@@ -10,6 +10,7 @@ import {geolocated} from "react-geolocated";
 import Geocode from "react-geocode";
 import AppMap from './GoogleMaps/AppMap'
 // import Loading from "./LoadingIcon/Loading";
+import ContactUs from './ContactUs/contactUs'
 
 const overlay = {
     position: "absolute",
@@ -162,6 +163,16 @@ class AllRestaurants extends Component {
                     <AppMap latitudes={this.state.latitudesOfNearByRest} longitudes={this.state.longitudesOfNearByRest}
                             latitude={this.state.latitude} longitude={this.state.longitude} name={this.state.restNames}/>
                 </div>
+
+                <div style={{margin: "5% 0% 5% 0%", minHeight: "400px"}}>
+                    <Heading title={"Connect With Us"} type={"h2"}/>
+                    <ContactUs/>
+                    <div style={{margin:"0% 0% 0% 10%"}}>
+                        <br/><br/><br/>
+                    </div>
+                </div>
+
+
             </div>)
     }
 
