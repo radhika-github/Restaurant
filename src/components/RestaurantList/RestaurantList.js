@@ -7,6 +7,7 @@ import StarBorderIcon from '@material-ui/icons/StarBorder';
 import {makeStyles} from "@material-ui/core";
 import './restaurants.css'
 import Heading from '../NavBar/Heading';
+// import Loading from "../LoadingIcon/Loading";
 
 const classes = makeStyles(theme => ({
     root: {
@@ -39,7 +40,8 @@ class RestaurantList extends Component {
         super(props);
         this.state = {
             hoverCellId: "",
-            showRestaurantDetails: false
+            showRestaurantDetails: false,
+            // componentsLoaded: false
         }
         this.onTileClick = this.onTileClick.bind(this);
     }
@@ -48,6 +50,9 @@ class RestaurantList extends Component {
         this.setState({showRestaurantDetails: true});
     }
 
+    // componentDidMount(){
+    //     this.setState({componentsLoaded: true})
+    // }
 
     render() {
         return (
@@ -56,6 +61,7 @@ class RestaurantList extends Component {
                     <div className={classes.root}>
                         <GridList cellHeight={400} cols={3} spacing={20} className={classes.gridList} margin={20}>
                             {
+                                // (this.state.componentsLoaded === true)?(
                                 (this.props.restaurants.length>0)?(
                                     Array.from(this.props.restaurants).map(tile => (
 
@@ -107,6 +113,7 @@ class RestaurantList extends Component {
     
                                     ))
                                 ):(<div><Heading type="h2" title="No Results Found"/></div>)
+                                // ):(<div><Loading></Loading></div>)
                                 }
                         </GridList>
 
