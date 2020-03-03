@@ -53,7 +53,7 @@ class Restaurant extends Component {
             .catch(console.log)
     }
 
-    componentDidMount() {
+    componentWillMount() {
         let id = this.props.match.params.id
         this.getBusinessById(id);
     }

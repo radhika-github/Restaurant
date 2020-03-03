@@ -8,6 +8,7 @@ import RestaurantList from "./RestaurantList/RestaurantList";
 import Heading from "./NavBar/Heading";
 import {geolocated} from "react-geolocated";
 import Geocode from "react-geocode";
+import AppMap from './GoogleMaps/AppMap'
 // import Loading from "./LoadingIcon/Loading";
 
 const overlay = {
@@ -30,9 +31,12 @@ class AllRestaurants extends Component {
             latitude: null,
             longitude: null,
             term: "",
-            restaurants: {},
+            restaurants: [],
             location: "",
-            // componentsLoaded: false
+            latitudesOfNearByRest: [],
+            longitudesOfNearByRest: [],
+            restNames: []
+
         }
     }
 
@@ -51,7 +55,7 @@ class AllRestaurants extends Component {
     getBusinessByLocation = () => {
         let url = "";
         if (this.state.latitude != null && this.state.longitude != null) {
-            url = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?latitude=${this.state.latitude}&longitude=${this.state.longitude}&limit=3`
+            url = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?latitude=${this.state.latitude}&longitude=${this.state.longitude}`
         } else {
             url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=USA&limit=3"
         }
@@ -60,7 +64,30 @@ class AllRestaurants extends Component {
             url: url,
             headers: {'Authorization': 'Bearer ' + token}
         }).then(res => {
-            this.setState({restaurants: res.data.businesses})
+            // this.setState({restaurants: res.data.businesses});
+            let count = 0;
+            Array.from(res.data.businesses).map(rest => {
+                if (count != 3) {
+                    this.setState({
+                        restaurants: this.state.restaurants.concat(rest)
+                    })
+                    count += 1;
+                }
+                let coordinates = rest.coordinates;
+                this.setState({
+                    latitudesOfNearByRest: this.state.latitudesOfNearByRest.concat(coordinates.latitude)
+                })
+                this.setState({
+                    longitudesOfNearByRest: this.state.longitudesOfNearByRest.concat(coordinates.longitude)
+                })
+                this.setState({
+                    restNames: this.state.restNames.concat(rest.name)
+                })
+            })
+            this.state.restNames.map(a => {
+                console.log("lat" + a)
+            })
+
         })
             .catch(console.log)
 
@@ -127,8 +154,13 @@ class AllRestaurants extends Component {
                 <div>
                     <Heading title={"Some Restaurants Near You..."} type={"h2"}/>
                     {/*{(this.state.componentsLoaded === true) ? (*/}
-                        <RestaurantList restaurants={this.state.restaurants}/>
+                    <RestaurantList restaurants={this.state.restaurants}/>
                     {/*) : (<Loading/>)}*/}
+                </div>
+
+                <div style={{margin: "0 15% 5% 15%"}}>
+                    <AppMap latitudes={this.state.latitudesOfNearByRest} longitudes={this.state.longitudesOfNearByRest}
+                            latitude={this.state.latitude} longitude={this.state.longitude} name={this.state.restNames}/>
                 </div>
             </div>)
     }
