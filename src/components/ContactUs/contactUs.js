@@ -21,11 +21,15 @@ class contactUs extends Component {
                             <li><a href="https://github.com/radhika-github" target="_blank"><i className="fa fa-github"
                                                                                                aria-hidden="true"></i></a>
                             </li>
-                            <li><a href="#"><i className="fa fa-google" aria-hidden="true"></i></a></li>
-                            <li><a href="https://www.linkedin.com/in/raj-kumar-web-designer/"><i
+                            <li><a className="mailto" href="mailto:radhi.virgo.16@gmail.com"><i className="fa fa-google"
+                                                                                                aria-hidden="true"></i></a>
+                            </li>
+                            <li><a href="https://www.linkedin.com/in/radhika-ravindranath-kulkarni/" target="_blank"><i
                                 className="fa fa-linkedin" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i className="fa fa-instagram" aria-hidden="true"></i></a></li>
-                            <li><a href="#"><i className="fa fa-envelope" aria-hidden="true"></i></a></li>
+                            <li><a href="https://www.instagram.com/radzz_kulkarni/" target="_blank"><i
+                                className="fa fa-instagram" aria-hidden="true" target="_blank"></i></a></li>
+                            <li><a className="mailto" href="mailto:rxk180002@utdallas.edu" target="_blank"><i
+                                className="fa fa-envelope" aria-hidden="true"></i></a></li>
 
                         </ul>
 
