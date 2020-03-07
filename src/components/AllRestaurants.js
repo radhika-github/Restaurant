@@ -11,6 +11,13 @@ import Geocode from "react-geocode";
 import AppMap from './GoogleMaps/AppMap'
 // import Loading from "./LoadingIcon/Loading";
 import ContactUs from './ContactUs/contactUs'
+import Button from '@material-ui/core/Button';
+import PropTypes from 'prop-types';
+import {makeStyles} from '@material-ui/core/styles';
+import {
+    withStyles,
+} from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
 
 const overlay = {
     position: "absolute",
@@ -24,6 +31,63 @@ const overlay = {
 
 const token = process.env.REACT_APP_API_KEY
 
+const useStyles = makeStyles({
+    root: {
+        background: props =>
+            props.color === 'red'
+                ? 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)'
+                : 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+        border: 0,
+        borderRadius: 3,
+        boxShadow: props =>
+            props.color === 'red'
+                ? '0 3px 5px 2px rgba(255, 105, 135, .3)'
+                : '0 3px 5px 2px rgba(33, 203, 243, .3)',
+        color: 'white',
+        height: 48,
+        padding: '0 30px',
+        margin: 8,
+    },
+});
+
+function MyButton(props) {
+    const {color, ...other} = props;
+    const classes = useStyles(props);
+    return <Button className={classes.root} {...other} />;
+}
+
+const CssTextField = withStyles({
+    root: {
+        '& label': {
+            color: 'white',
+        },
+        '& label.Mui-focused': {
+            color: '#FF8E53',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: '#FF8E53',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: '#FE6B8B',
+            },
+            '&:hover fieldset': {
+                borderColor: '#FE6B8B',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#FE6B8B',
+            },
+        },
+        resize:{
+            fontSize:50
+        },
+    },
+})(TextField);
+
+MyButton.propTypes = {
+    color: PropTypes.oneOf(['blue', 'red']).isRequired,
+};
+
 class AllRestaurants extends Component {
 
     constructor() {
@@ -36,8 +100,8 @@ class AllRestaurants extends Component {
             location: "",
             latitudesOfNearByRest: [],
             longitudesOfNearByRest: [],
-            restNames: []
-
+            restNames: [],
+            restIds: []
         }
     }
 
@@ -58,7 +122,7 @@ class AllRestaurants extends Component {
         if (this.state.latitude != null && this.state.longitude != null) {
             url = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?latitude=${this.state.latitude}&longitude=${this.state.longitude}`
         } else {
-            url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=USA&limit=3"
+            url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=USA"
         }
         Axios({
             method: 'get',
@@ -84,11 +148,10 @@ class AllRestaurants extends Component {
                 this.setState({
                     restNames: this.state.restNames.concat(rest.name)
                 })
+                this.setState({
+                    restIds: this.state.restIds.concat(rest.id)
+                })
             })
-            this.state.restNames.map(a => {
-                console.log("lat" + a)
-            })
-
         })
             .catch(console.log)
 
@@ -96,16 +159,17 @@ class AllRestaurants extends Component {
         Geocode.setLanguage("en");
         Geocode.setRegion("us");
         Geocode.enableDebug();
-        Geocode.fromLatLng(this.state.latitude, this.state.longitude).then(
-            response => {
-                const address = response.results[0].formatted_address;
-                this.setState({location: address})
-            },
-            error => {
-                console.error(error);
-            }
-        );
-        // this.setState({componentsLoaded: true})
+        if (this.state.latitude !== null && this.state.longitude !== null) {
+            Geocode.fromLatLng(this.state.latitude, this.state.longitude).then(
+                response => {
+                    const address = response.results[0].formatted_address;
+                    this.setState({location: address})
+                },
+                error => {
+                    console.error(error);
+                }
+            );
+        }
 
     }
 
@@ -116,28 +180,47 @@ class AllRestaurants extends Component {
                 this.setState({latitude: success.coords.latitude});
                 this.setState({longitude: success.coords.longitude});
                 this.getBusinessByLocation();
+            }, error => {
+                console.log("Geo Location Not received")
+                this.getBusinessByLocation();
             });
 
     }
 
     render() {
+        const { classes } = this.props;
         return (
             <div>
                 <div style={overlay}>
                     <Heading title={"Food Hunt"} type={"h1"}/>
                     <div style={{margin: "10% 0"}}>
-                        <div style={{background: "rgba(0,0,0,0.5)", padding: "1% 1%", margin: "0 20%"}}>
-                            <input type="text" value={this.state.term} style={{width: "390px", opacity: "1"}}
-                                   placeholder="Search any restaurant or food or cuisine"
-                                   onChange={(e) => this.handleSearchChange(e.target.value)}/>
+                        <div style={{background: "rgba(0,0,0,0.5)", padding: "1% 1%", margin: "0 15%"}}>
+                            <CssTextField
+                                value={this.state.term}
+                                label="Search any restaurant or food or cuisine..."
+                                variant="outlined"
+                                id="custom-css-outlined-input"
+                                InputProps={{ style: { fontSize: 20, color: "white" } }}
+                                InputLabelProps={{style: { fontSize: 20} }}
+                                style={{width: "400px"}}
+                                onChange={(e) => this.handleSearchChange(e.target.value)}
+                            />
+
                             &nbsp;&nbsp;&nbsp;
-                            <input type="text" value={this.state.location} placeholder="United States of America"
-                                   style={{width: "350px"}}
-                                   onChange={(e) => this.handleLocationChange(e.target.value)}/>
+                            <CssTextField
+                                value={this.state.location}
+                                label="Location"
+                                variant="outlined"
+                                id="custom-css-outlined-input"
+                                InputProps={{ style: { fontSize: 20, color: "white" } }}
+                                InputLabelProps={{style: { fontSize: 20} }}
+                                style={{width: "390px"}}
+                                onChange={(e) => this.handleLocationChange(e.target.value)}
+                            />
                             &nbsp;&nbsp;&nbsp;
-                            <button type="button"><Link to={{
+                            <MyButton color="red"><Link to={{
                                 pathname: '/search/' + (this.state.location === "" ? "USA" : this.state.location) + (this.state.term === "" ? "" : `/${this.state.term}`),
-                            }}>Search</Link></button>
+                            }} style={{color:"black",textDecoration: 'inherit'}}>Search</Link></MyButton>
 
                         </div>
 
@@ -161,13 +244,16 @@ class AllRestaurants extends Component {
 
                 <div style={{margin: "0 15% 5% 15%"}}>
                     <AppMap latitudes={this.state.latitudesOfNearByRest} longitudes={this.state.longitudesOfNearByRest}
-                            latitude={this.state.latitude} longitude={this.state.longitude} name={this.state.restNames}/>
+                            latitude={(this.state.latitude) === null ? 37.767413217936834 : this.state.latitude}
+                            longitude={(this.state.longitude === null) ? -122.419418 : this.state.longitude}
+                            name={this.state.restNames}
+                            id={this.state.restIds}/>
                 </div>
 
                 <div style={{margin: "5% 0% 5% 0%", minHeight: "400px"}}>
                     <Heading title={"Connect With Us"} type={"h2"}/>
                     <ContactUs/>
-                    <div style={{margin:"0% 0% 0% 10%"}}>
+                    <div style={{margin: "0% 0% 0% 10%"}}>
                         <br/><br/><br/>
                     </div>
                 </div>

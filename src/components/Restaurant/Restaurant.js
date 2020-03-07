@@ -63,7 +63,15 @@ class Restaurant extends Component {
         return (
             <div>
                 <NavBar/>
+                    <div style={{fontFamily: "Catamaran", fontSize: "3rem", textAlign: "center"}}>{this.state.restaurant.name}
+                        {
+                            (this.state.restaurant.is_closed === true)?(
+                                <Badge variant="danger">CLOSED NOW</Badge>
+                            ): (<span><sup>&nbsp;<Badge variant="success" style={{fontSize: "1rem"}}>OPEN NOW</Badge></sup></span>)
 
+                        }
+
+                    </div>
                     <div style={{margin:"5%", float: "left", width: "50%", height: "30%"}}>
                         <div className="carousel-wrapper">
                             <Carousel autoPlay={true}showArrows={true} showIndicators={true} infiniteLoop={true} showThumbs={false}>
@@ -79,17 +87,7 @@ class Restaurant extends Component {
                     </div>
 
                 <div style={{margin:"5% 10% 5% 5%", alignItems: "center"}}>
-                    <div style={{display: "inline-block"}}>
-                    <div><span style={{fontFamily: "Catamaran", fontSize: "3rem", textAlign: "center"}}>{this.state.restaurant.name}</span>
-                    {
-                        (this.state.restaurant.is_closed === true)?(
-                            <Badge variant="danger">CLOSED NOW</Badge>
-                        ): (<span><sup>&nbsp;<Badge variant="success" style={{paddingBottom: "1%"}}>OPEN NOW</Badge></sup></span>)
 
-                    }
-
-                    </div>
-                    </div>
                     <br/>
                     <Card>
                         <Card.Body>
@@ -108,20 +106,10 @@ class Restaurant extends Component {
                             <Card.Subtitle><PhoneIcon/>&nbsp;{this.state.restaurant.display_phone}</Card.Subtitle>
                             <br/>
                             <Card.Subtitle><RoomIcon/>&nbsp;{this.state.address1}, {this.state.address2}</Card.Subtitle>
-                            {/*<Card.Subtitle className="mb-2 text-muted">Card Subtitle</Card.Subtitle>*/}
-                            {/*<Card.Text>*/}
-                                {/*{*/}
-                                    {/*this.state.restaurant.hours[0].open.map(entry=>(*/}
-                                    {/*<div>{entry.start} - {entry.end} </div>*/}
-                                    {/*))*/}
-                                {/*}*/}
-                            {/*</Card.Text>*/}
-                            {/*<Card.Link href="#">Card Link</Card.Link>*/}
-                            {/*<Card.Link href="#">Another Link</Card.Link>*/}
                         </Card.Body>
                     </Card>
                     <br/><br/>
-                    <Map isMarkerShown height={"40%"} width={"40%"} destLat={this.state.latitude} destLng={this.state.longitude}/>
+                    <Map isMarkerShown height={"40%"} width={"40%"} destLat={this.state.latitude} destLng={this.state.longitude} name={this.state.restaurant.name}/>
                 </div>
             </div>);
     }
