@@ -20,6 +20,7 @@ class Search extends Component {
         return (
             <div>
                 <NavBar/>
+
                 <div style={{
                     overflow: "hidden",
                     margin: "0 20% 2% 20%",

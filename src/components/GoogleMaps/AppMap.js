@@ -35,7 +35,9 @@ const AppMap = compose(
                                 props.setHoverMarker(index)
                                 props.setActiveLabel(props.name[index])
                             }}
-                            onMouseOut={()=>{props.setActiveLabel("")}}/>
+                            onMouseOut={()=>{props.setActiveLabel("")}}
+                        onClick={() => window.open(`/restaurant/${props.name[index].replace(" ", "-")}/${props.id[index]}`, '_self')}
+                    />
                 )
             )
         }
