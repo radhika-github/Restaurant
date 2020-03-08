@@ -9,14 +9,10 @@ import Heading from "./NavBar/Heading";
 import {geolocated} from "react-geolocated";
 import Geocode from "react-geocode";
 import AppMap from './GoogleMaps/AppMap'
-// import Loading from "./LoadingIcon/Loading";
 import ContactUs from './ContactUs/contactUs'
 import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
-import {makeStyles} from '@material-ui/core/styles';
-import {
-    withStyles,
-} from '@material-ui/core/styles';
+import {withStyles, makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
 const overlay = {
@@ -29,7 +25,7 @@ const overlay = {
     zIndex: "2147483647",
 }
 
-const token = process.env.REACT_APP_API_KEY
+const token = process.env.REACT_APP_API_KEY;
 
 const useStyles = makeStyles({
     root: {
@@ -59,7 +55,7 @@ function MyButton(props) {
 const CssTextField = withStyles({
     root: {
         '& label': {
-            color: 'white',
+            color: '#FE6B8B',
         },
         '& label.Mui-focused': {
             color: '#FF8E53',
@@ -154,7 +150,12 @@ class AllRestaurants extends Component {
             })
         })
             .catch(console.log)
+        this.getUserLocation();
 
+    }
+
+
+    getUserLocation() {
         Geocode.setApiKey(process.env.REACT_APP_GOOGLE_MAP_KEY);
         Geocode.setLanguage("en");
         Geocode.setRegion("us");
@@ -170,21 +171,17 @@ class AllRestaurants extends Component {
                 }
             );
         }
-
     }
-
 
     componentDidMount() {
         window.navigator.geolocation.getCurrentPosition(
             success => {
                 this.setState({latitude: success.coords.latitude});
                 this.setState({longitude: success.coords.longitude});
-                this.getBusinessByLocation();
             }, error => {
                 console.log("Geo Location Not received")
-                this.getBusinessByLocation();
             });
-
+        this.getBusinessByLocation();
     }
 
     render() {
@@ -237,9 +234,7 @@ class AllRestaurants extends Component {
                 </video>
                 <div>
                     <Heading title={"Some Restaurants Near You..."} type={"h2"}/>
-                    {/*{(this.state.componentsLoaded === true) ? (*/}
                     <RestaurantList restaurants={this.state.restaurants}/>
-                    {/*) : (<Loading/>)}*/}
                 </div>
 
                 <div style={{margin: "0 15% 5% 15%"}}>

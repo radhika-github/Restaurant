@@ -50,10 +50,6 @@ class RestaurantList extends Component {
         this.setState({showRestaurantDetails: true});
     }
 
-    // componentDidMount(){
-    //     this.setState({componentsLoaded: true})
-    // }
-
     render() {
         return (
             <div>
