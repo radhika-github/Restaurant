@@ -33,7 +33,7 @@ function MyButton(props) {
 const CssTextField = withStyles({
     root: {
         '& label': {
-            color: 'black',
+            color: '#FE6B8B',
         },
         '& label.Mui-focused': {
             color: '#FF8E53',
@@ -87,11 +87,11 @@ class SearchField extends Component{
             <div style={{margin: "0% 12% 0% 5%"}}>
                 <CssTextField
                     value={this.state.term}
-                    label="Search any restaurant or food or cuisine... "
+                    label="Search any restaurant or food or cuisine"
                     variant="outlined"
                     id="custom-css-outlined-input"
                     InputProps={{ style: { fontSize: 16, color: "black" } }}
-                    InputLabelProps={{style: { fontSize: 16} }}
+                    InputLabelProps={{style: { fontSize: 15} }}
                     style={{width: "300px"}}
                     onChange={(e) => this.handleSearchChange(e.target.value)}
                 />
