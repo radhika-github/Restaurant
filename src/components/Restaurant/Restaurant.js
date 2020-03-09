@@ -12,6 +12,7 @@ import PhoneIcon from '@material-ui/icons/Phone';
 import RoomIcon from '@material-ui/icons/Room';
 import MoneyIcon from '@material-ui/icons/Money';
 import Map from "../GoogleMaps/Map";
+import RestaurantsVersusCategory from "../Graph/RestaurantsVersusCategory";
 
 // import faStyles from 'font-awesome/css/font-awesome.css'
 
@@ -28,9 +29,23 @@ class Restaurant extends Component {
             address1: "",
             address2: "",
             latitude: 0,
-            longitude: 0
+            longitude: 0,
+            hours: [],
+            dayOfWeek: ["Mon", "Tues", "Wed", "Thurs", "Fri", "Sat", "Sun"],
+            categories: []
         }
     }
+
+    getTime = (time) => {
+        let outputTime = "";
+        if (time < 1200) {
+            outputTime += ((time / 100.00).toFixed(2)) + " A.M.";
+        } else {
+            time -= 1200;
+            outputTime += ((time / 100.00).toFixed(2)) + " P.M.";
+        }
+        return outputTime;
+    };
 
     getBusinessById = (id) => {
         Axios({
@@ -38,17 +53,30 @@ class Restaurant extends Component {
             url: `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/${id}`,
             headers: {'Authorization': 'Bearer ' + token}
         }).then(res => {
-            console.log(res.data);
             this.setState({id: res.data.id});
             this.setState({images: res.data.photos})
             this.setState({restaurant: res.data})
             let location = this.state.restaurant.location;
-            this.setState({address1:location.display_address[0]})
-            this.setState({address2: location.display_address[1]})
-            let hours = this.state.restaurant.hours;
+            this.setState({address1: location.display_address[0]});
+            this.setState({address2: location.display_address[1]});
+            let hours = [];
+            let allHours = this.state.restaurant.hours[0];
+            allHours.open.map((day, index) => {
+                hours[index] = {
+                    start: this.getTime(Number(day.start)),
+                    end: this.getTime(Number(day.end))
+                }
+            });
+            this.setState({hours: hours});
             let coordinates = this.state.restaurant.coordinates;
-            this.setState({latitude: coordinates.latitude})
-            this.setState({longitude: coordinates.longitude})
+            this.setState({latitude: coordinates.latitude});
+            this.setState({longitude: coordinates.longitude});
+            let categories= this.state.restaurant.categories;
+            let cat=[]
+            categories.map(category=>{
+                cat = cat.concat(category.title)
+            });
+            this.setState({categories: cat})
         })
             .catch(console.log)
     }
@@ -63,30 +91,35 @@ class Restaurant extends Component {
         return (
             <div>
                 <NavBar/>
-                    <div style={{fontFamily: "Catamaran", fontSize: "3rem", textAlign: "center"}}>{this.state.restaurant.name}
-                        {
-                            (this.state.restaurant.is_closed === true)?(
-                                <Badge variant="danger">CLOSED NOW</Badge>
-                            ): (<span><sup>&nbsp;<Badge variant="success" style={{fontSize: "1rem"}}>OPEN NOW</Badge></sup></span>)
+                <div style={{
+                    fontFamily: "Catamaran",
+                    fontSize: "3rem",
+                    textAlign: "center"
+                }}>{this.state.restaurant.name}
+                    {
+                        (this.state.restaurant.is_closed === true) ? (
+                            <Badge variant="danger">CLOSED NOW</Badge>
+                        ) : (<span><sup>&nbsp;<Badge variant="success" style={{fontSize: "1rem"}}>OPEN NOW</Badge></sup></span>)
 
-                        }
+                    }
 
+                </div>
+                <div style={{margin: "5%", float: "left", width: "50%", height: "30%"}}>
+                    <div className="carousel-wrapper">
+                        <Carousel autoPlay={true} showArrows={true} showIndicators={true} infiniteLoop={true}
+                                  showThumbs={false}>
+                            {
+                                this.state.images.map((photo, index) => (
+                                    <div>
+                                        <img src={photo}/>
+                                    </div>
+                                ))
+                            }
+                        </Carousel>
                     </div>
-                    <div style={{margin:"5%", float: "left", width: "50%", height: "30%"}}>
-                        <div className="carousel-wrapper">
-                            <Carousel autoPlay={true}showArrows={true} showIndicators={true} infiniteLoop={true} showThumbs={false}>
-                                {
-                                    this.state.images.map((photo, index) => (
-                                        <div>
-                                            <img src={photo}/>
-                                        </div>
-                                    ))
-                                }
-                            </Carousel>
-                        </div>
-                    </div>
+                </div>
 
-                <div style={{margin:"5% 10% 5% 5%", alignItems: "center"}}>
+                <div style={{margin: "5% 10% 5% 5%", alignItems: "center"}}>
 
                     <br/>
                     <Card>
@@ -101,16 +134,31 @@ class Restaurant extends Component {
                                 starCount={5}
                                 value={this.state.restaurant.rating}
                             /> &nbsp;&nbsp;</Card.Title>
-                            <Card.Subtitle className="mb-2 text-muted">{this.state.restaurant.review_count}&nbsp; Reviews</Card.Subtitle>
+                            <Card.Subtitle
+                                className="mb-2 text-muted">{this.state.restaurant.review_count}&nbsp; Reviews</Card.Subtitle>
                             <br/>
                             <Card.Subtitle><PhoneIcon/>&nbsp;{this.state.restaurant.display_phone}</Card.Subtitle>
                             <br/>
                             <Card.Subtitle><RoomIcon/>&nbsp;{this.state.address1}, {this.state.address2}</Card.Subtitle>
+                            <br/>
+                            <Card.Subtitle>Hours</Card.Subtitle>
+                            <table>
+                                {
+                                    this.state.hours.map((hour, index) => (
+                                        <tr>
+                                            <td>{this.state.dayOfWeek[index]}&nbsp;</td>
+                                            <td>{hour.start} - {hour.end}</td>
+                                        </tr>
+                                    ))
+                                }
+                            </table>
                         </Card.Body>
                     </Card>
                     <br/><br/>
-                    <Map isMarkerShown height={"40%"} width={"40%"} destLat={this.state.latitude} destLng={this.state.longitude} name={this.state.restaurant.name}/>
+                    <Map isMarkerShown height={"40%"} width={"40%"} destLat={this.state.latitude}
+                         destLng={this.state.longitude} name={this.state.restaurant.name}/>
                 </div>
+
             </div>);
     }
 }

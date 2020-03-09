@@ -14,6 +14,7 @@ import Button from '@material-ui/core/Button';
 import PropTypes from 'prop-types';
 import {withStyles, makeStyles} from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
+import RestaurantsVersusCategory from "./Graph/RestaurantsVersusCategory";
 
 const overlay = {
     position: "absolute",
@@ -86,8 +87,8 @@ MyButton.propTypes = {
 
 class AllRestaurants extends Component {
 
-    constructor() {
-        super();
+    constructor(props) {
+        super(props);
         this.state = {
             latitude: null,
             longitude: null,
@@ -97,7 +98,10 @@ class AllRestaurants extends Component {
             latitudesOfNearByRest: [],
             longitudesOfNearByRest: [],
             restNames: [],
-            restIds: []
+            restIds: [],
+            errorMsg: "",
+            allRestaurants: "",
+
         }
     }
 
@@ -127,13 +131,15 @@ class AllRestaurants extends Component {
         }).then(res => {
             // this.setState({restaurants: res.data.businesses});
             let count = 0;
+            this.setState({allRestaurants: res.data.businesses});
             Array.from(res.data.businesses).map(rest => {
-                if (count != 3) {
+                if (count < 3) {
                     this.setState({
                         restaurants: this.state.restaurants.concat(rest)
                     })
                     count += 1;
                 }
+
                 let coordinates = rest.coordinates;
                 this.setState({
                     latitudesOfNearByRest: this.state.latitudesOfNearByRest.concat(coordinates.latitude)
@@ -149,7 +155,11 @@ class AllRestaurants extends Component {
                 })
             })
         })
-            .catch(console.log)
+            .catch((error)=>{
+                if(error.message === "Request failed with status code 429"){
+                    this.setState({errorMsg: "Oops! Looks like we ran out of number of times we can talk to Yelp"})
+                }
+            });
         this.getUserLocation();
 
     }
@@ -234,7 +244,7 @@ class AllRestaurants extends Component {
                 </video>
                 <div>
                     <Heading title={"Some Restaurants Near You..."} type={"h2"}/>
-                    <RestaurantList restaurants={this.state.restaurants}/>
+                    <RestaurantList restaurants={this.state.restaurants} errorMsg={this.state.errorMsg}/>
                 </div>
 
                 <div style={{margin: "0 15% 5% 15%"}}>
@@ -245,6 +255,10 @@ class AllRestaurants extends Component {
                             id={this.state.restIds}/>
                 </div>
 
+                <div>
+                    <Heading title={"Know Your City More"} type={"h2"}/>
+                    <RestaurantsVersusCategory allRestaurants={this.state.allRestaurants}/>
+                </div>
                 <div style={{margin: "5% 0% 5% 0%", minHeight: "400px"}}>
                     <Heading title={"Connect With Us"} type={"h2"}/>
                     <ContactUs/>
@@ -252,8 +266,6 @@ class AllRestaurants extends Component {
                         <br/><br/><br/>
                     </div>
                 </div>
-
-
             </div>)
     }
 
