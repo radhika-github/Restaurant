@@ -45,7 +45,8 @@ class Search extends Component {
                 }}/>&nbsp;$$$$</label>
                 </div>
                 <SearchAPI location={this.props.match.params.location} term={this.props.match.params.term}
-                           openNow={this.state.openNow} priceLow={this.state.priceLow} priceMedium={this.state.priceMedium}
+                           openNow={this.state.openNow} priceLow={this.state.priceLow}
+                           priceMedium={this.state.priceMedium}
                            priceHigh={this.state.priceHigh} priceVeryHigh={this.state.priceVeryHigh}/>
             </div>
         );

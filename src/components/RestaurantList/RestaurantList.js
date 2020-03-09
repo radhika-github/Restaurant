@@ -108,7 +108,13 @@ class RestaurantList extends Component {
                                         </GridListTile>
     
                                     ))
-                                ):(<div><Heading type="h2" title="No Results Found"/></div>)
+                                ):(
+                                    (this.props.errorMsg==="")?(
+                                        <div><Heading type="h2" title="No Results Found"/></div>
+                                        ):(
+                                        <div><Heading type="h2" title={this.props.errorMsg}/></div>
+                                    )
+                                    )
                                 // ):(<div><Loading></Loading></div>)
                                 }
                         </GridList>
