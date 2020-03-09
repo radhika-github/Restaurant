@@ -133,7 +133,7 @@ class AllRestaurants extends Component {
             let count = 0;
             this.setState({allRestaurants: res.data.businesses});
             Array.from(res.data.businesses).map(rest => {
-                if (count < 3) {
+                if (count !== 3) {
                     this.setState({
                         restaurants: this.state.restaurants.concat(rest)
                     })
