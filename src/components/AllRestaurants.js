@@ -94,13 +94,15 @@ class AllRestaurants extends Component {
             longitude: null,
             term: "",
             restaurants: [],
-            location: "",
+            location: "USA",
             latitudesOfNearByRest: [],
             longitudesOfNearByRest: [],
             restNames: [],
             restIds: [],
             errorMsg: "",
             allRestaurants: "",
+            centerLatitude: null,
+            centerLongitude: null
 
         }
     }
@@ -122,7 +124,7 @@ class AllRestaurants extends Component {
         if (this.state.latitude != null && this.state.longitude != null) {
             url = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?latitude=${this.state.latitude}&longitude=${this.state.longitude}`
         } else {
-            url = "https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=USA"
+            url = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?location=${this.state.location}`
         }
         Axios({
             method: 'get',
@@ -132,6 +134,11 @@ class AllRestaurants extends Component {
             // this.setState({restaurants: res.data.businesses});
             let count = 0;
             this.setState({allRestaurants: res.data.businesses});
+            let region =res.data.region;
+            let center = region.center;
+            this.setState({centerLatitude: center.latitude});
+            this.setState({centerLongitude: center.longitude});
+
             Array.from(res.data.businesses).map(rest => {
                 if (count !== 3) {
                     this.setState({
@@ -188,10 +195,11 @@ class AllRestaurants extends Component {
             success => {
                 this.setState({latitude: success.coords.latitude});
                 this.setState({longitude: success.coords.longitude});
+                this.getBusinessByLocation();
             }, error => {
                 console.log("Geo Location Not received")
+                this.getBusinessByLocation();
             });
-        this.getBusinessByLocation();
     }
 
     render() {
@@ -248,9 +256,10 @@ class AllRestaurants extends Component {
                 </div>
 
                 <div style={{margin: "0 15% 5% 15%"}}>
+                   
                     <AppMap latitudes={this.state.latitudesOfNearByRest} longitudes={this.state.longitudesOfNearByRest}
-                            latitude={(this.state.latitude) === null ? 37.767413217936834 : this.state.latitude}
-                            longitude={(this.state.longitude === null) ? -122.419418 : this.state.longitude}
+                            latitude={this.state.centerLatitude}
+                            longitude={this.state.centerLongitude}
                             name={this.state.restNames}
                             id={this.state.restIds}/>
                 </div>

@@ -23,6 +23,9 @@ const AppMap = compose(
 )(props => (
     <GoogleMap defaultZoom={13} center={{lat: props.latitude, lng: props.longitude}}>
         {
+            console.log(props)
+        }
+        {
             Array.from(props.latitudes).map((latitude, index) =>
                 (
                     <Marker id={index} position={{lat: latitude, lng: props.longitudes[index]}} label={(index===props.hoverMarker)?props.activeLabel:""}
